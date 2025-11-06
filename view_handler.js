@@ -253,13 +253,17 @@ class GalleryHandler extends ComponentHandler {
 		this.gallery_items = gallery_items;
 		this.gallery_views = [];
 		
-		for (let tapestry of this.gallery_items.gallery_elements) {
+		for (const [index, tapestry] of this.gallery_items.gallery_elements.entries()) {
 			const gallery_item = new TapestryHandler(1, tapestry, this.display);
 			gallery_item.set_lazy_content();
 			gallery_item.container.classList.add("gallery-box");
 			gallery_item.add_button("explore", "explore", false, function () {
 				window.location.href='explore.html'; 
 				localStorage.setItem('selectedRule', JSON.stringify(tapestry.rule._instructions));
+				localStorage.setItem('selectedRuleIndex', index);
+			})
+			gallery_item.add_button("saved-tapes", "view saved tapes", false, function () {
+				window.location.href='saved-tapes.html'; 
 			})
 			this.gallery_views.push(gallery_item);
 		}

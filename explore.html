@@ -57,6 +57,8 @@
 <script>
 	const context = {
 		selected_rule: new Rule(JSON.parse(localStorage.getItem('selectedRule')), 4),
+		num_rules: JSON.parse(localStorage.getItem("cool_rules")).length,
+		selected_rule_index: parseInt(localStorage.getItem('selectedRuleIndex')),
 		current_colour: 0,
 		tape_length: 100
 	};
@@ -69,6 +71,19 @@
 		context.selected_rule,
 		document.getElementById("tape-container")
 	);
+	
+	const save_button = document.createElement("button");
+	save_button.innerHTML = "Save tape + tapestry";
+	document.body.appendChild(save_button);
+	
+	save_button.addEventListener("click", () => {
+		let tapestry_data = JSON.parse(localStorage.getItem("saved_tapestry_data"));
+		console.log("tapestry data: " + tapestry_data);
+		let current_rule_saved_tapes = tapestry_data[context.selected_rule_index];
+		console.log("saved tapes for current rule: " + JSON.stringify(tapestry_data[context.selected_rule_index]));
+		
+	});
+	
 	const download_button = document.createElement("button");
 	download_button.innerHTML = "Download tapestry as .PNG";
 	document.body.appendChild(download_button);

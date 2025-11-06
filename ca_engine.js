@@ -181,6 +181,7 @@ class Environment {
         this.starting_population = starting_population;
         this.memory = 15;
         this.previous_selection_results = [];
+		this.tapestry_data = [];
         this.cool_rules = [];
 		
 		for (let i = 0; i < starting_population; i++) {
@@ -215,15 +216,28 @@ class Environment {
 	
 	save_data() {
 		let rule_arrays = [];
+		let saved_tapestry_data = [];
+		
 		for (let rule of this.cool_rules) {
 			rule_arrays.push(rule._instructions);
 		}
+		
+		for (let data of this.tapestry_data) {
+			saved_tapestry_data.push({
+				rule: data["rule"]._instructions,
+				saved_tapes: data["saved_tapes"]
+			});
+		}
+		
 		localStorage.setItem("num_states", JSON.stringify(this.num_states));
 		localStorage.setItem("cool_rules", JSON.stringify(rule_arrays));
+		console.log("saved tapestry data: ", JSON.stringify(saved_tapestry_data));
+		localStorage.setItem("saved_tapestry_data", JSON.stringify(saved_tapestry_data));
 	}
 	
 	load_data() {
 		let num_states = localStorage.getItem("num_states");
+		let saved_tapestry_data = localStorage.getItem("saved_tapestry_data");
 		let rule_arrays = localStorage.getItem("cool_rules");
 		if (num_states !== null) {
 			this.num_states = parseInt(num_states);
@@ -235,6 +249,29 @@ class Environment {
 			for (let rule_array of JSON.parse(rule_arrays)) {
 				this.cool_rules.push(new Rule(rule_array, this.num_states));
 			}
+		}
+		
+		if (saved_tapestry_data !== null && saved_tapestry_data !== 'undefined') {
+			this.tapestry_data = [];
+			for (let tapestry_datum of JSON.parse(saved_tapestry_data)){
+				this.tapestry_data.push(
+					{
+						rule: new Rule(tapestry_datum["rule"], this.num_states),
+						saved_tapes: tapestry_datum["saved_tapes"]
+					}
+				)
+			}
+		} else {
+			this.tapestry_data = [];
+			console.log(JSON.parse(rule_arrays));
+			for (let rule of JSON.parse(rule_arrays)){
+				this.tapestry_data.push(
+					{
+						rule: rule,
+						saved_tapes: []
+					})
+			}
+			
 		}
 	}
 }
@@ -262,6 +299,7 @@ class EvolutionEnvironment {
 		this.current_tape = generate_random_tape(this.env.num_states, this.tape_resolution);
 		//console.log(this.current_tape);
 	}
+	
 
 	
 	select_parent(index) {
