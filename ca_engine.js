@@ -239,6 +239,7 @@ class Environment {
 		let num_states = localStorage.getItem("num_states");
 		let saved_tapestry_data = localStorage.getItem("saved_tapestry_data");
 		let rule_arrays = localStorage.getItem("cool_rules");
+        
 		if (num_states !== null) {
 			this.num_states = parseInt(num_states);
 		}
@@ -261,17 +262,6 @@ class Environment {
 					}
 				)
 			}
-		} else {
-			this.tapestry_data = [];
-			console.log(JSON.parse(rule_arrays));
-			for (let rule of JSON.parse(rule_arrays)){
-				this.tapestry_data.push(
-					{
-						rule: rule,
-						saved_tapes: []
-					})
-			}
-			
 		}
 	}
 }
